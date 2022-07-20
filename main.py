@@ -22,7 +22,7 @@ link = "https://deep-blaze-default-rtdb.firebaseio.com/"
 
 time.sleep(2)
 
-for i in range(60):
+while True:
 
     conexao = mysql.connector.connect(
         host='localhost',
