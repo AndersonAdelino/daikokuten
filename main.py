@@ -27,7 +27,7 @@ while True:
     conexao = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='D1210',
+        password='Bazooka0102#',
         database='daikokuten'
     )
     cursor = conexao.cursor()
@@ -251,14 +251,13 @@ while True:
                 cursor.execute(f'UPDATE combinations SET qnt = qnt + 1, blacks = blacks + 1 WHERE comb = {cod[0][0]}')
         conexao.commit()
 
-    #Firestore
-    if minute == 7:
+    # Firestore Minutes
+    if minute == 00:
         check = f'SELECT * FROM repetitions'
         cursor.execute(check)
         rows = cursor.fetchall()
         conexao.commit()
         cont = 0
-
 
         for i in range(len(rows)):
             cursor.execute(f'SELECT minute FROM repetitions WHERE minute = {cont}')
@@ -283,6 +282,36 @@ while True:
             db.collection('List').document(f'{minR[0][0]}').set(data)
 
             cont += 1
+
+    # Firestore Combinations
+    if minute == 00 or minute == 10 or minute == 20 or minute == 30 or minute == 40 or minute == 50:
+        check = f'SELECT * FROM combinations'
+        cursor.execute(check)
+        rows = cursor.fetchall()
+        conexao.commit()
+        cont = [1111, 2121, 1122, 1121, 1212, 1222, 1211, 1112, 2112, 2212, 2222, 2122, 2221, 2211, 1221, 2111]
+
+        for i in range(len(cont)):
+            cursor.execute(f'SELECT comb FROM combinations WHERE comb = {cont[i]}')
+            comb = cursor.fetchall()
+            cursor.execute(f'SELECT qnt FROM combinations WHERE comb = {cont[i]}')
+            qntC = cursor.fetchall()
+            cursor.execute(f'SELECT reds FROM combinations WHERE comb = {cont[i]}')
+            redsC = cursor.fetchall()
+            cursor.execute(f'SELECT blacks FROM combinations WHERE comb = {cont[i]}')
+            blacksC = cursor.fetchall()
+            cursor.execute(f'SELECT whites FROM combinations WHERE comb = {cont[i]}')
+            whitesC = cursor.fetchall()
+
+            data = {
+                'comb': comb[0][0],
+                'qnt': qntC[0][0],
+                'reds': redsC[0][0],
+                'blacks': blacksC[0][0],
+                'whites': whitesC[0][0]
+            }
+
+            db.collection('Combinations').document(f'{comb[0][0]}').set(data)
 
     # Combinations 4
     check = f'SELECT cod FROM combinations_4 WHERE EXISTS(SELECT * FROM combinations_4 WHERE cod={cod4})'
